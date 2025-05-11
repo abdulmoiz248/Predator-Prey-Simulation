@@ -33,12 +33,10 @@ const SimulationParameters: React.FC<SimulationParametersProps> = ({
   endYear,
   initialRabbits,
   initialWolves,
- 
   alpha,
   beta,
   gamma,
   delta,
- 
   simulationRunning,
   onChange,
   onStart,
@@ -47,10 +45,9 @@ const SimulationParameters: React.FC<SimulationParametersProps> = ({
   // Suggested values for Lotka-Volterra model
   const suggestions = {
     alpha: 0.2,
-    beta: 0.01, 
-    gamma: 0.2, 
+    beta: 0.01,
+    gamma: 0.2,
     delta: 0.002,
-  
     initialRabbits: 100,
     initialWolves: 20,
     initialFoxes: 15,
@@ -69,11 +66,11 @@ const SimulationParameters: React.FC<SimulationParametersProps> = ({
   }
 
   return (
-    <Card className="border shadow-sm h-full bg-gradient-to-b from-[#84ffc9]  via-[#aab2ff] to-[#eca0ff]">
+    <Card className="border shadow-sm h-full bg-gradient-to-b from-[#84ffc9]/90 via-[#aab2ff]/90 to-[#eca0ff]/90 dark:from-[#84ffc9]/30 dark:via-[#aab2ff]/30 dark:to-[#eca0ff]/30 backdrop-blur-sm animate-fade-in">
       <CardHeader className="pb-2">
         <CardTitle className="text-xl font-semibold flex items-center justify-between">
           <div className="flex items-center">
-            <Info className="w-5 h-5 mr-2 text-violet-500" />
+            <Info className="w-5 h-5 mr-2 text-violet-500 animate-pulse-slow" />
             Simulation Parameters
           </div>
           <TooltipProvider>
@@ -81,17 +78,16 @@ const SimulationParameters: React.FC<SimulationParametersProps> = ({
               <TooltipTrigger asChild>
                 <Button
                   variant="outline"
-                  
                   size="sm"
                   onClick={applyOptimalValues}
                   disabled={simulationRunning}
-                  className="text-xs bg-[#eca0ff] text-black"
+                  className="text-xs bg-[#eca0ff]/80 dark:bg-[#eca0ff]/40 text-black dark:text-white hover:bg-[#eca0ff] dark:hover:bg-[#eca0ff]/60 transition-all duration-300 hover:scale-105 disabled:hover:scale-100"
                 >
                   Apply Optimal Values
                 </Button>
               </TooltipTrigger>
-              <TooltipContent className="bg-gradient-to-br from-[#84ffc9] to-[#eca0ff]">
-                <p >Apply suggested values for a stable Lotka-Volterra simulation</p>
+              <TooltipContent className="bg-gradient-to-br from-[#84ffc9]/90 to-[#eca0ff]/90 dark:from-[#84ffc9]/50 dark:to-[#eca0ff]/50 border-none shadow-lg backdrop-blur-md">
+                <p className="font-medium">Apply suggested values for a stable Lotka-Volterra simulation</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -109,7 +105,7 @@ const SimulationParameters: React.FC<SimulationParametersProps> = ({
               value={startYear}
               onChange={(e) => onChange({ startYear: Number.parseInt(e.target.value) })}
               disabled={simulationRunning}
-              className="border-violet-200 focus:border-violet-500"
+              className="border-violet-200 dark:border-violet-800 focus:border-violet-500 dark:focus:border-violet-500 bg-white/70 dark:bg-black/20 backdrop-blur-sm transition-all duration-300 focus:ring-2 focus:ring-violet-500/20"
             />
           </div>
           <div className="space-y-2">
@@ -122,7 +118,7 @@ const SimulationParameters: React.FC<SimulationParametersProps> = ({
               value={endYear}
               onChange={(e) => onChange({ endYear: Number.parseInt(e.target.value) })}
               disabled={simulationRunning}
-              className="border-violet-200 focus:border-violet-500"
+              className="border-violet-200 dark:border-violet-800 focus:border-violet-500 dark:focus:border-violet-500 bg-white/70 dark:bg-black/20 backdrop-blur-sm transition-all duration-300 focus:ring-2 focus:ring-violet-500/20"
             />
           </div>
         </div>
@@ -136,7 +132,7 @@ const SimulationParameters: React.FC<SimulationParametersProps> = ({
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <HelpCircle className="w-3 h-3 ml-1 text-gray-400" />
+                    <HelpCircle className="w-3 h-3 ml-1 text-gray-400 hover:text-violet-500 transition-colors" />
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Suggested: {suggestions.initialRabbits}</p>
@@ -153,7 +149,7 @@ const SimulationParameters: React.FC<SimulationParametersProps> = ({
               value={initialRabbits}
               onChange={(e) => onChange({ initialRabbits: Number(e.target.value) })}
               disabled={simulationRunning}
-              className="border-violet-200 focus:border-violet-500"
+              className="border-violet-200 dark:border-violet-800 focus:border-violet-500 dark:focus:border-violet-500 bg-white/70 dark:bg-black/20 backdrop-blur-sm transition-all duration-300 focus:ring-2 focus:ring-violet-500/20"
             />
           </div>
           <div className="space-y-2">
@@ -165,7 +161,7 @@ const SimulationParameters: React.FC<SimulationParametersProps> = ({
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <HelpCircle className="w-3 h-3 ml-1 text-gray-400" />
+                    <HelpCircle className="w-3 h-3 ml-1 text-gray-400 hover:text-pink-500 transition-colors" />
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Suggested: {suggestions.initialWolves}</p>
@@ -182,14 +178,14 @@ const SimulationParameters: React.FC<SimulationParametersProps> = ({
               value={initialWolves}
               onChange={(e) => onChange({ initialWolves: Number(e.target.value) })}
               disabled={simulationRunning}
-              className="border-violet-200 focus:border-violet-500"
+              className="border-pink-200 dark:border-pink-800 focus:border-pink-500 dark:focus:border-pink-500 bg-white/70 dark:bg-black/20 backdrop-blur-sm transition-all duration-300 focus:ring-2 focus:ring-pink-500/20"
             />
           </div>
         </div>
-    
-        <div className="pt-2 border-t border-gray-100">
+
+        <div className="pt-2 border-t border-gray-100/50 dark:border-gray-800/50">
           <h3 className="text-md font-semibold mb-3 flex items-center">
-            <Dna className="w-4 h-4 mr-1 text-violet-500" />
+            <Dna className="w-4 h-4 mr-1 text-violet-500 animate-spin-slow" />
             Model Parameters
           </h3>
           <div className="grid grid-cols-2 gap-4">
@@ -201,7 +197,7 @@ const SimulationParameters: React.FC<SimulationParametersProps> = ({
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <HelpCircle className="w-3 h-3 ml-1 text-gray-400" />
+                      <HelpCircle className="w-3 h-3 ml-1 text-gray-400 hover:text-violet-500 transition-colors" />
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>Suggested: {suggestions.alpha.toFixed(3)}</p>
@@ -219,7 +215,7 @@ const SimulationParameters: React.FC<SimulationParametersProps> = ({
                 value={alpha}
                 onChange={(e) => onChange({ alpha: Number(e.target.value) })}
                 disabled={simulationRunning}
-                className="border-violet-200 focus:border-violet-500"
+                className="border-violet-200 dark:border-violet-800 focus:border-violet-500 dark:focus:border-violet-500 bg-white/70 dark:bg-black/20 backdrop-blur-sm transition-all duration-300 focus:ring-2 focus:ring-violet-500/20"
               />
             </div>
             <div className="space-y-2">
@@ -230,7 +226,7 @@ const SimulationParameters: React.FC<SimulationParametersProps> = ({
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <HelpCircle className="w-3 h-3 ml-1 text-gray-400" />
+                      <HelpCircle className="w-3 h-3 ml-1 text-gray-400 hover:text-pink-500 transition-colors" />
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>Suggested: {suggestions.beta.toFixed(3)}</p>
@@ -248,7 +244,7 @@ const SimulationParameters: React.FC<SimulationParametersProps> = ({
                 value={beta}
                 onChange={(e) => onChange({ beta: Number(e.target.value) })}
                 disabled={simulationRunning}
-                className="border-pink-200 focus:border-pink-500"
+                className="border-pink-200 dark:border-pink-800 focus:border-pink-500 dark:focus:border-pink-500 bg-white/70 dark:bg-black/20 backdrop-blur-sm transition-all duration-300 focus:ring-2 focus:ring-pink-500/20"
               />
             </div>
           </div>
@@ -261,7 +257,7 @@ const SimulationParameters: React.FC<SimulationParametersProps> = ({
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <HelpCircle className="w-3 h-3 ml-1 text-gray-400" />
+                      <HelpCircle className="w-3 h-3 ml-1 text-gray-400 hover:text-violet-500 transition-colors" />
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>Suggested: {suggestions.gamma.toFixed(3)}</p>
@@ -279,7 +275,7 @@ const SimulationParameters: React.FC<SimulationParametersProps> = ({
                 value={gamma}
                 onChange={(e) => onChange({ gamma: Number(e.target.value) })}
                 disabled={simulationRunning}
-                className="border-violet-200 focus:border-violet-500"
+                className="border-violet-200 dark:border-violet-800 focus:border-violet-500 dark:focus:border-violet-500 bg-white/70 dark:bg-black/20 backdrop-blur-sm transition-all duration-300 focus:ring-2 focus:ring-violet-500/20"
               />
             </div>
             <div className="space-y-2">
@@ -290,7 +286,7 @@ const SimulationParameters: React.FC<SimulationParametersProps> = ({
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <HelpCircle className="w-3 h-3 ml-1 text-gray-400" />
+                      <HelpCircle className="w-3 h-3 ml-1 text-gray-400 hover:text-pink-500 transition-colors" />
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>Suggested: {suggestions.delta.toFixed(4)}</p>
@@ -308,29 +304,32 @@ const SimulationParameters: React.FC<SimulationParametersProps> = ({
                 value={delta}
                 onChange={(e) => onChange({ delta: Number(e.target.value) })}
                 disabled={simulationRunning}
-                className="border-pink-200 focus:border-pink-500"
+                className="border-pink-200 dark:border-pink-800 focus:border-pink-500 dark:focus:border-pink-500 bg-white/70 dark:bg-black/20 backdrop-blur-sm transition-all duration-300 focus:ring-2 focus:ring-pink-500/20"
               />
             </div>
           </div>
         </div>
 
-        <div className="bg-violet-50 p-3 rounded-md border border-violet-100 mt-2">
-          <h4 className="text-sm font-medium text-violet-800 mb-1">Lotka-Volterra Model Suggestions</h4>
-          <p className="text-xs text-violet-700">For a stable predator-prey simulation, try these parameter ranges:</p>
-          <ul className="text-xs text-violet-700 mt-1 space-y-1">
-            <li>• Alpha (prey growth): 0.1-0.3</li>
-            <li>• Beta (predation rate): 0.01-0.02</li>
-            <li>• Gamma (predator death): 0.1-0.3</li>
-            <li>• Delta (predator reproduction): 0.001-0.005</li>
+        <div className="bg-violet-50/80 dark:bg-violet-900/30 p-3 rounded-md border border-violet-100 dark:border-violet-800 mt-2 backdrop-blur-sm hover:shadow-md transition-all duration-300 animate-pulse-slow">
+          <h4 className="text-sm font-medium text-violet-800 dark:text-violet-300 mb-1">
+            Lotka-Volterra Model Suggestions
+          </h4>
+          <p className="text-xs text-violet-700 dark:text-violet-400">
+            For a stable predator-prey simulation, try these parameter ranges:
+          </p>
+          <ul className="text-xs text-violet-700 dark:text-violet-400 mt-1 space-y-1">
+            <li className="hover:translate-x-1 transition-transform">• Alpha (prey growth): 0.1-0.3</li>
+            <li className="hover:translate-x-1 transition-transform">• Beta (predation rate): 0.01-0.02</li>
+            <li className="hover:translate-x-1 transition-transform">• Gamma (predator death): 0.1-0.3</li>
+            <li className="hover:translate-x-1 transition-transform">• Delta (predator reproduction): 0.001-0.005</li>
           </ul>
         </div>
       </CardContent>
       <CardFooter>
-        
         <Button
           onClick={onStart}
           disabled={simulationRunning || !connected}
-          className="w-full bg-gradient-to-r from-violet-600 to-pink-600 hover:from-violet-700 hover:to-pink-700 text-white"
+          className="w-full bg-gradient-to-r from-violet-600 to-pink-600 hover:from-violet-700 hover:to-pink-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] disabled:hover:scale-100 animate-shimmer"
         >
           {simulationRunning ? (
             <>
@@ -339,7 +338,7 @@ const SimulationParameters: React.FC<SimulationParametersProps> = ({
             </>
           ) : (
             <>
-              <span className="mr-2 h-4 w-4">▶</span>
+              <span className="mr-2 h-4 w-4 animate-pulse">▶</span>
               Start Simulation
             </>
           )}
