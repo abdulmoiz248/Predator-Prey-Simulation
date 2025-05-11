@@ -12,7 +12,7 @@ import EcologicalFacts from "@/components/EcologicalFacts";
 import AlgorithmInfo from "@/components/AlgorithmInfo";
 import SimulationCharts from "@/components/SimulationCharts";
 
-// Ecological facts about wolves and rabbits
+
 const ecologicalFacts = [
   {
     title: "Rabbit Reproduction",
@@ -135,7 +135,7 @@ export default function Home() {
     };
   }, [showFacts]);
 
-  // Socket connection
+  
   useEffect(() => {
     const newSocket = io("http://localhost:5000");
     newSocket.on("connect", () => {
@@ -211,7 +211,6 @@ export default function Home() {
     };
   }, [endYear, startYear, toast]);
 
-  // Simulation parameter change handler
   const handleParamChange = (changes: any) => {
     if ("startYear" in changes) setStartYear(changes.startYear);
     if ("endYear" in changes) setEndYear(changes.endYear);
@@ -339,7 +338,7 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen p-4" style={{ background: colors.background }}>
+      <main className="min-h-screen p-4 bg-[#9bafd9]" >
       <div className="container mx-auto max-w-7xl">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           <div className="lg:col-span-1">
