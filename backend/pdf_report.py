@@ -2,23 +2,37 @@ import os
 import threading
 import datetime
 from fpdf import FPDF
-from .plotting import plot_population_trends
+from .plotting import plot_population_trends, plot_rabbit_wolf_ratio_pie
 
 def generate_pdf_report(results, summary, params, execution_time=None, cores_used=None, performance_data=None):
     static_dir = os.path.join(os.path.dirname(__file__), 'static')
     os.makedirs(static_dir, exist_ok=True)
     img_dir = os.path.join(static_dir, 'plots')
-    plot_thread = threading.Thread(target=plot_population_trends, args=(results, img_dir))
-    plot_thread.start()
-    plot_thread.join()
+    # --- Generate all plots in parallel ---
+    plot_threads = []
+    plot_threads.append(threading.Thread(target=plot_population_trends, args=(results, img_dir)))
+    pie_result = {}
+    def pie_worker():
+        pie_result['paths'] = plot_rabbit_wolf_ratio_pie(results, img_dir)
+    plot_threads.append(threading.Thread(target=pie_worker))
+    for t in plot_threads:
+        t.start()
+    for t in plot_threads:
+        t.join()
+    # --- End parallel plot generation ---
     total_plot = os.path.join(img_dir, "total_population.png")
     phase_plot = os.path.join(img_dir, "phase_space.png")
     ratio_plot = os.path.join(img_dir, "population_ratio.png")
     grid_plot = os.path.join(img_dir, "grid_visualization.png")
+    # Pie chart paths
+    pie_start, pie_end, pie_avg = pie_result.get('paths', (None, None, None))
     pdf_path = os.path.join(static_dir, 'report.pdf')
     print(f'[INFO] Creating PDF report at {pdf_path}')
     class PDF(FPDF):
         def header(self):
+            # No header on first page, only on subsequent pages
+            if self.page_no() == 1:
+                return
             try:
                 logo_path = os.path.join(os.path.dirname(__file__), 'static', 'comsats_logo.png')
                 if os.path.exists(logo_path):
@@ -49,6 +63,42 @@ def generate_pdf_report(results, summary, params, execution_time=None, cores_use
             self.cell(0, 10, f'Page {self.page_no()}', 0, 0, 'C')
     pdf = PDF()
     pdf.set_auto_page_break(auto=True, margin=15)
+    pdf.add_page()
+    # --- Custom first page with big logo and title ---
+    logo_path = os.path.join(os.path.dirname(__file__), 'static', 'comsats_logo.png')
+    if os.path.exists(logo_path):
+        # Center the logo, make it big
+        # Calculate width to fit nicely (e.g., 100-120mm wide, keep aspect ratio)
+        # Place it vertically centered in upper half
+        logo_width = 100
+        page_width = pdf.w - 2 * pdf.l_margin
+        x_logo = (pdf.w - logo_width) / 2
+        y_logo = 30
+        try:
+            pdf.image(logo_path, x=x_logo, y=y_logo, w=logo_width)
+        except Exception as e:
+            print(f"[WARNING] Could not add big logo: {str(e)}")
+        y_after_logo = y_logo + 60  # adjust if logo is taller/shorter
+    else:
+        y_after_logo = 60
+    # Add title below the logo, centered, big font
+    pdf.set_y(y_after_logo + 30)
+    pdf.set_font('Arial', 'B', 22)
+    pdf.set_text_color(0, 51, 102)
+    pdf.cell(0, 18, 'Predator-Prey Simulation', 0, 1, 'C')
+    pdf.set_font('Arial', 'B', 16)
+    pdf.cell(0, 12, 'using Lotka-Volterra Model in Parallel', 0, 1, 'C')
+    pdf.ln(10)
+    pdf.set_font('Arial', 'I', 11)
+    pdf.set_text_color(100, 100, 100)
+    pdf.cell(0, 10, f'Report generated on {datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}', 0, 1, 'C')
+    pdf.ln(10)
+    # Optionally, add a border to the first page
+    pdf.set_draw_color(0, 51, 102)
+    pdf.set_line_width(0.5)
+    pdf.rect(10, 10, 190, 277)
+    # --- End custom first page ---
+    # Start the rest of the report on a new page
     pdf.add_page()
     pdf.set_draw_color(0, 51, 102)
     pdf.set_line_width(0.5)
@@ -199,42 +249,31 @@ def generate_pdf_report(results, summary, params, execution_time=None, cores_use
     pdf.cell(0, 10, 'Population by Year:', 0, 1)
     pdf.set_font('Arial', '', 10)
     pdf.set_text_color(0, 0, 0)
-    pdf.set_fill_color(0, 51, 102)
-    pdf.set_text_color(255, 255, 255)
-    pdf.set_font('Arial', 'B', 10)
-    pdf.cell(30, 8, 'Year', 1, 0, 'C', 1)
-    pdf.cell(40, 8, 'Rabbits', 1, 0, 'C', 1)
-    pdf.cell(40, 8, 'Wolves', 1, 0, 'C', 1)
-    pdf.cell(40, 8, 'Wolves/Rabbits', 1, 1, 'C', 1)
-    pdf.set_text_color(0, 0, 0)
-    pdf.set_font('Arial', '', 10)
+    # Table header
+    def add_population_table_header():
+        pdf.set_fill_color(0, 51, 102)
+        pdf.set_text_color(255, 255, 255)
+        pdf.set_font('Arial', 'B', 10)
+        pdf.cell(30, 8, 'Year', 1, 0, 'C', 1)
+        pdf.cell(40, 8, 'Rabbits', 1, 0, 'C', 1)
+        pdf.cell(40, 8, 'Wolves', 1, 0, 'C', 1)
+        pdf.cell(40, 8, 'Wolves/Rabbits', 1, 1, 'C', 1)
+        pdf.set_text_color(0, 0, 0)
+        pdf.set_font('Arial', '', 10)
     years_count = len(results['total_rabbits_by_year'])
     max_rows_per_page = 25
-    total_pages_needed = (years_count + max_rows_per_page - 1) // max_rows_per_page
-    if years_count > max_rows_per_page:
-        pdf.set_font('Arial', 'I', 9)
-        pdf.cell(0, 6, f"Note: Data spans {total_pages_needed} pages. Years are shown at regular intervals.", 0, 1, 'L')
-        pdf.set_font('Arial', '', 10)
-        step = max(1, years_count // max_rows_per_page)
-    else:
-        step = 1
     fill = False
-    for i in range(0, years_count, step):
+    add_population_table_header()
+    for i in range(years_count):
         year = results['start_year'] + i
         rabbits = int(results['total_rabbits_by_year'][i])
         wolves = int(results['total_wolves_by_year'][i])
         ratio = wolves / rabbits if rabbits > 0 else 0
-        if i > 0 and i % max_rows_per_page == 0:
+        # Check if we need to add a new page for the table
+        # 8 is the row height, 15 is the bottom margin, 10 is a little buffer
+        if pdf.get_y() + 8 + 15 > pdf.h:
             pdf.add_page()
-            pdf.set_fill_color(0, 51, 102)
-            pdf.set_text_color(255, 255, 255)
-            pdf.set_font('Arial', 'B', 10)
-            pdf.cell(30, 8, 'Year', 1, 0, 'C', 1)
-            pdf.cell(40, 8, 'Rabbits', 1, 0, 'C', 1)
-            pdf.cell(40, 8, 'Wolves', 1, 0, 'C', 1)
-            pdf.cell(40, 8, 'Wolves/Rabbits', 1, 1, 'C', 1)
-            pdf.set_text_color(0, 0, 0)
-            pdf.set_font('Arial', '', 10)
+            add_population_table_header()
             fill = False
         pdf.set_fill_color(240, 240, 250) if fill else pdf.set_fill_color(230, 230, 240)
         pdf.cell(30, 8, str(year), 1, 0, 'C', fill)
@@ -271,9 +310,9 @@ def generate_pdf_report(results, summary, params, execution_time=None, cores_use
         pdf.rect(plot_x-1, plot_y-1, plot_w+2, plot_h+2)
         pdf.set_y(plot_y + plot_h + 5)
         pdf.set_font('Arial', 'I', 10)
-        pdf.cell(0, 10, "Figure 1: Population trends of rabbits and wolves over time", 0, 1, 'C')
+        pdf.cell(0, 10, "Figure 1: Population proportions of rabbits and wolves", 0, 1, 'C')
         pdf.set_font('Arial', '', 10)
-        pdf.multi_cell(0, 6, "This graph shows the population dynamics of rabbits (prey) and wolves (predators) over time. The cyclical pattern is characteristic of predator-prey systems, where an increase in prey population leads to an increase in predator population, which then causes a decrease in prey population, followed by a decrease in predator population, and the cycle continues.", 0, 'J')
+        pdf.multi_cell(0, 6, "This donut chart displays the current population proportions of rabbits (prey) and wolves (predators). Rabbits make up a significantly larger portion of the ecosystem, which is typical in predator-prey relationships where prey populations must outnumber predators to sustain balance.", 0, 'J')
         print(f'[INFO] Added population plot to PDF: {total_plot}')
     if os.path.exists(phase_plot):
         pdf.add_page()
@@ -329,6 +368,27 @@ def generate_pdf_report(results, summary, params, execution_time=None, cores_use
         pdf.set_font('Arial', '', 10)
         pdf.multi_cell(0, 6, f"This visualization shows the final distribution of rabbit and wolf populations across the {results['rows']}×{results['cols']} grid. Each cell represents a distinct area in the ecosystem, with its own population dynamics. The parallel processing approach allowed each grid cell to be calculated independently, providing a more realistic spatial representation of the ecosystem.", 0, 'J')
         print(f'[INFO] Added grid visualization to PDF: {grid_plot}')
+    # --- After main plots, add pie charts ---
+    for pie_path, pie_title in [
+        (pie_start, 'Rabbit-Wolf Ratio at Start of Simulation'),
+        (pie_end, 'Rabbit-Wolf Ratio at End of Simulation'),
+        (pie_avg, 'Average Rabbit-Wolf Ratio Over Simulation'),
+    ]:
+        if pie_path and os.path.exists(pie_path):
+            pdf.add_page()
+            pdf.set_font('Arial', 'B', 14)
+            pdf.set_text_color(0, 51, 102)
+            pdf.cell(0, 10, pie_title, 0, 1, 'C')
+            plot_x = 40
+            plot_y = pdf.get_y()
+            plot_w = 120
+            plot_h = 120
+            pdf.image(pie_path, x=plot_x, y=plot_y, w=plot_w)
+            pdf.set_y(plot_y + plot_h + 5)
+            pdf.set_font('Arial', 'I', 10)
+            pdf.cell(0, 10, f"Figure: {pie_title}", 0, 1, 'C')
+            pdf.set_font('Arial', '', 10)
+            pdf.multi_cell(0, 6, "This circular chart visualizes the proportion of rabbits and wolves, providing an intuitive overview of the predator-prey ratio.", 0, 'J')
     pdf.add_page()
     pdf.set_font('Arial', 'B', 14)
     pdf.set_text_color(0, 51, 102)

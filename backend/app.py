@@ -5,7 +5,8 @@ import os
 import threading
 import json
 import traceback
-from .simulation import run_simulation, generate_ai_summary
+from .simulation import run_simulation
+from .ai_summary import generate_ai_summary
 from .pdf_report import generate_pdf_report
 from .utils import download_logo
 

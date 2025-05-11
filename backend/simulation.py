@@ -27,14 +27,6 @@ def process_grid_cell(args):
         return r, c, next_rabbits, next_wolves
     return r, c, 0, 0
 
-def generate_ai_summary(results):
-    # Mock implementation
-    return (
-        f"This predator-prey simulation demonstrates the classic Lotka-Volterra model dynamics. "
-        f"Starting with {results['total_rabbits_by_year'][0]} rabbits and {results['total_wolves_by_year'][0]} wolves, "
-        "the populations exhibit cyclical behavior with phase shifts between predator and prey populations. "
-        "... (summary truncated for brevity) ..."
-    )
 
 def run_simulation(start_year, end_year, rabbits, wolves, alpha, beta, gamma, delta, socketio=None):
     start_time = time.time()
