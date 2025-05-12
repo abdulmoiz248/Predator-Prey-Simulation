@@ -66,7 +66,7 @@ def handle_start_simulation(data):
                     results.get('cores_used'),
                     results.get('performance_data')
                 )
-                pdf_url = f"/static/report.pdf"
+                pdf_url = f"http://localhost:5000/static/report.pdf"
                 print(f'[INFO] PDF report ready at {pdf_url}')
                 socketio.emit('pdf_ready', {
                     "pdfUrl": pdf_url,
