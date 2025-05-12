@@ -2,7 +2,7 @@ import os
 import threading
 import datetime
 from fpdf import FPDF
-from .plotting import plot_population_trends, plot_rabbit_wolf_ratio_pie
+from .plotting import plot_population_trends, plot_rabbit_wolf_ratio_pie, plot_grid_visualization, plot_population_ratio, plot_phase_space
 
 def generate_pdf_report(results, summary, params, execution_time=None, cores_used=None, performance_data=None):
     static_dir = os.path.join(os.path.dirname(__file__), 'static')
