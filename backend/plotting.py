@@ -8,7 +8,7 @@ from matplotlib.ticker import MaxNLocator
 from matplotlib.colors import LinearSegmentedColormap
 
 def plot_population_trends(results, outdir):
-    """Generate a line plot showing rabbit and wolf populations over time."""
+    """Generate a bar plot showing rabbit and wolf populations over time."""
     print(f'[INFO] Generating population trend plot in {outdir}')
     os.makedirs(outdir, exist_ok=True)
     
@@ -17,47 +17,56 @@ def plot_population_trends(results, outdir):
     years = list(range(results['start_year'], results['start_year'] + len(rabbits)))
 
     # Create a new figure for this plot
-    plt.figure(figsize=(10, 6))
-    plt.plot(years, rabbits, 'b-', label='Rabbits', linewidth=2.5)
-    plt.plot(years, wolves, 'r-', label='Wolves', linewidth=2.5)
-
-    marker_interval = max(1, len(years) // 10)
-    plt.plot(years[::marker_interval], rabbits[::marker_interval], 'bo', markersize=6)
-    plt.plot(years[::marker_interval], wolves[::marker_interval], 'ro', markersize=6)
-
-    plt.title('Population Dynamics Over Time', fontsize=18, fontweight='bold')
+    plt.figure(figsize=(12, 7))
+    
+    # Set the width of the bars
+    bar_width = 0.35
+    
+    # Set the positions of the bars on the x-axis
+    r1 = np.arange(len(years))
+    r2 = [x + bar_width for x in r1]
+    
+    # Create the bar chart
+    plt.bar(r1, rabbits, width=bar_width, color='#4F8EF7', label='Rabbits', edgecolor='black', linewidth=0.5)
+    plt.bar(r2, wolves, width=bar_width, color='#E94F37', label='Wolves', edgecolor='black', linewidth=0.5)
+    
+    # Add labels and title
     plt.xlabel('Year', fontsize=14)
     plt.ylabel('Population', fontsize=14)
-    plt.grid(True, linestyle='--', alpha=0.7)
+    plt.title('Population Dynamics Over Time', fontsize=18, fontweight='bold')
+    
+    # Add xticks on the middle of the group bars
+    plt.xticks([r + bar_width/2 for r in range(len(years))], years)
+    
+    # Add a grid for better readability
+    plt.grid(True, linestyle='--', alpha=0.3, axis='y')
+    
+    # Add a legend
     plt.legend(fontsize=12, frameon=True, facecolor='white', edgecolor='gray')
-
-    # Add annotations for maximum points
+    
+    # Add annotations for maximum values
     max_rabbit_idx = np.argmax(rabbits)
     max_wolf_idx = np.argmax(wolves)
     
     plt.annotate(f'Max: {rabbits[max_rabbit_idx]}',
-                 xy=(years[max_rabbit_idx], rabbits[max_rabbit_idx]),
-                 xytext=(10, 20), textcoords='offset points',
+                 xy=(r1[max_rabbit_idx], rabbits[max_rabbit_idx]),
+                 xytext=(0, 15), textcoords='offset points',
                  arrowprops=dict(arrowstyle='->', connectionstyle='arc3,rad=.2', color='blue'),
-                 fontsize=10, color='blue')
+                 fontsize=10, color='blue', ha='center')
     
     plt.annotate(f'Max: {wolves[max_wolf_idx]}',
-                 xy=(years[max_wolf_idx], wolves[max_wolf_idx]),
-                 xytext=(10, -30), textcoords='offset points',
+                 xy=(r2[max_wolf_idx], wolves[max_wolf_idx]),
+                 xytext=(0, 15), textcoords='offset points',
                  arrowprops=dict(arrowstyle='->', connectionstyle='arc3,rad=.2', color='red'),
-                 fontsize=10, color='red')
-
-    max_pop = max(max(rabbits), max(wolves))
-    plt.ylim(0, max_pop * 1.2)
-    plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True))
-    plt.grid(True, linestyle='--', alpha=0.3)
+                 fontsize=10, color='red', ha='center')
+    
+    # Set background color
     plt.gca().set_facecolor('#f8f9fa')
-
-    for spine in plt.gca().spines.values():
-        spine.set_visible(True)
-        spine.set_color('gray')
-        spine.set_linewidth(0.5)
-
+    
+    # Adjust layout
+    plt.tight_layout()
+    
+    # Save the figure
     fname = os.path.join(outdir, "total_population.png")
     plt.savefig(fname, dpi=300, bbox_inches='tight')
     plt.close()  # Important: close the figure to free memory
@@ -88,7 +97,7 @@ def plot_rabbit_wolf_ratio_pie(results, outdir):
     pie_paths = []
     for rabbits, wolves, title, fname in chart_data:
         # Create a separate figure for each pie chart
-        plt.figure(figsize=(7, 7))
+        plt.figure(figsize=(8, 8))
         
         sizes = [rabbits, wolves]
         labels = ['Rabbits', 'Wolves']
@@ -102,10 +111,14 @@ def plot_rabbit_wolf_ratio_pie(results, outdir):
             startangle=90,
             colors=colors,
             wedgeprops=dict(width=0.4, edgecolor='w'),
-            textprops={'fontsize': 12}
+            textprops={'fontsize': 12, 'fontweight': 'bold'}
         )
 
-        plt.title(f'{title}\nRabbit-Wolf Ratio', fontsize=14, fontweight='bold')
+        # Customize text properties
+        for autotext in autotexts:
+            autotext.set_fontsize(10)
+        
+        plt.title(f'{title}\nRabbit-Wolf Ratio', fontsize=16, fontweight='bold', pad=20)
         
         # Add the center circle to create a donut chart
         centre_circle = plt.Circle((0, 0), 0.70, fc='white')
@@ -114,7 +127,7 @@ def plot_rabbit_wolf_ratio_pie(results, outdir):
 
         plt.tight_layout()
         outpath = os.path.join(outdir, fname)
-        plt.savefig(outpath, dpi=200, bbox_inches='tight')
+        plt.savefig(outpath, dpi=300, bbox_inches='tight')
         plt.close()  # Important: close the figure
         print(f'[INFO] Saved pie chart: {outpath}')
         pie_paths.append(outpath)
@@ -128,22 +141,26 @@ def plot_grid_visualization(results, outdir):
     
     # Create a sample grid if not provided in results
     if 'grid_data' not in results:
-        grid_size = 20
+        # Get grid dimensions from results or use defaults
+        rows = results.get('rows', 5)
+        cols = results.get('cols', 5)
+        
         # Create a grid with: 0=empty, 1=rabbit, 2=wolf
-        grid = np.zeros((grid_size, grid_size), dtype=int)
+        grid = np.zeros((rows, cols), dtype=int)
         
         # Place rabbits (more common)
-        rabbit_count = results['total_rabbits_by_year'][-1]
-        rabbit_positions = np.random.choice(grid_size*grid_size, min(rabbit_count, grid_size*grid_size//2), replace=False)
+        rabbit_count = min(results['total_rabbits_by_year'][-1], rows*cols*0.6)
+        rabbit_positions = np.random.choice(rows*cols, int(rabbit_count), replace=False)
         for pos in rabbit_positions:
-            grid[pos // grid_size, pos % grid_size] = 1
+            grid[pos // cols, pos % cols] = 1
             
         # Place wolves (less common)
-        wolf_count = results['total_wolves_by_year'][-1]
-        remaining_positions = [i for i in range(grid_size*grid_size) if i not in rabbit_positions]
-        wolf_positions = np.random.choice(remaining_positions, min(wolf_count, len(remaining_positions)), replace=False)
-        for pos in wolf_positions:
-            grid[pos // grid_size, pos % grid_size] = 2
+        wolf_count = min(results['total_wolves_by_year'][-1], rows*cols*0.3)
+        remaining_positions = [i for i in range(rows*cols) if i not in rabbit_positions]
+        if remaining_positions and wolf_count > 0:
+            wolf_positions = np.random.choice(remaining_positions, int(min(wolf_count, len(remaining_positions))), replace=False)
+            for pos in wolf_positions:
+                grid[pos // cols, pos % cols] = 2
     else:
         grid = results['grid_data']
     
@@ -151,20 +168,39 @@ def plot_grid_visualization(results, outdir):
     colors = ['#FFFFFF', '#4F8EF7', '#E94F37']
     cmap = LinearSegmentedColormap.from_list('custom_cmap', colors, N=3)
     
-    plt.figure(figsize=(10, 10))
+    plt.figure(figsize=(10, 8))
     plt.imshow(grid, cmap=cmap, interpolation='nearest')
     
     # Add a color bar
     cbar = plt.colorbar(ticks=[0, 1, 2])
     cbar.set_ticklabels(['Empty', 'Rabbit', 'Wolf'])
     
-    plt.title('Ecosystem Grid Visualization', fontsize=16, fontweight='bold')
-    plt.grid(False)
+    # Add grid lines
+    plt.grid(True, which='both', color='black', linewidth=0.5, alpha=0.3)
     
-    # Remove axis ticks for cleaner visualization
-    plt.xticks([])
-    plt.yticks([])
+    # Add cell counts in the title
+    rabbit_cells = np.sum(grid == 1)
+    wolf_cells = np.sum(grid == 2)
+    empty_cells = np.sum(grid == 0)
     
+    plt.title(f'Ecosystem Grid Visualization\n'
+              f'Rabbits: {rabbit_cells} cells | Wolves: {wolf_cells} cells | Empty: {empty_cells} cells', 
+              fontsize=14, fontweight='bold', pad=15)
+    
+    # Add row and column numbers
+    plt.xticks(np.arange(grid.shape[1]))
+    plt.yticks(np.arange(grid.shape[0]))
+    
+    # Rotate the tick labels and set their alignment
+    plt.setp(plt.gca().get_xticklabels(), rotation=0, ha="center", rotation_mode="anchor")
+    
+    # Loop over data dimensions and create text annotations
+    for i in range(grid.shape[0]):
+        for j in range(grid.shape[1]):
+            text = plt.text(j, i, 'R' if grid[i, j] == 1 else 'W' if grid[i, j] == 2 else '',
+                           ha="center", va="center", color="black", fontsize=8, fontweight='bold')
+    
+    plt.tight_layout()
     fname = os.path.join(outdir, "grid_visualization.png")
     plt.savefig(fname, dpi=300, bbox_inches='tight')
     plt.close()
@@ -209,12 +245,29 @@ def plot_phase_space(results, outdir):
     # Add a legend for start and end points
     plt.scatter([], [], s=100, c='#4F8EF7', edgecolor='black', label=f'Start ({years[0]})')
     plt.scatter([], [], s=100, c='#E94F37', edgecolor='black', label=f'End ({years[-1]})')
-    plt.legend()
+    plt.scatter([], [], s=100, c='gray', edgecolor='black', label='Intermediate Years')
+    plt.legend(loc='upper right')
     
     # Set axis limits with some padding
     plt.xlim(min(rabbits)*0.9, max(rabbits)*1.1)
     plt.ylim(min(wolves)*0.9, max(wolves)*1.1)
     
+    # Add annotations for key points
+    plt.annotate(f'Start: ({rabbits[0]}, {wolves[0]})',
+                xy=(rabbits[0], wolves[0]),
+                xytext=(20, 20),
+                textcoords="offset points",
+                arrowprops=dict(arrowstyle="->", connectionstyle="arc3,rad=.2"),
+                fontsize=10)
+    
+    plt.annotate(f'End: ({rabbits[-1]}, {wolves[-1]})',
+                xy=(rabbits[-1], wolves[-1]),
+                xytext=(20, -20),
+                textcoords="offset points",
+                arrowprops=dict(arrowstyle="->", connectionstyle="arc3,rad=.2"),
+                fontsize=10)
+    
+    plt.tight_layout()
     fname = os.path.join(outdir, "phase_space.png")
     plt.savefig(fname, dpi=300, bbox_inches='tight')
     plt.close()
@@ -276,28 +329,17 @@ def plot_population_ratio(results, outdir):
     
     plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True))
     
+    # Add shaded regions to indicate favorable/unfavorable ratios
+    plt.axhspan(0, 1, alpha=0.2, color='red', label='Wolf Advantage')
+    plt.axhspan(1, max(ratios)*1.1, alpha=0.2, color='blue', label='Rabbit Advantage')
+    
+    # Update legend with new shaded regions
+    handles, labels = plt.gca().get_legend_handles_labels()
+    plt.legend(handles=handles, labels=labels, loc='upper right', fontsize=10)
+    
+    plt.tight_layout()
     fname = os.path.join(outdir, "population_ratio.png")
     plt.savefig(fname, dpi=300, bbox_inches='tight')
     plt.close()
     print(f'[INFO] Saved population ratio plot: {fname}')
     return fname
-
-# Example usage
-if __name__ == "__main__":
-    # Sample data for demonstration
-    results = {
-        'start_year': 2023,
-        'total_rabbits_by_year': [100, 110, 120, 130, 145, 160, 175, 190, 210, 230, 252],
-        'total_wolves_by_year': [20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10],
-    }
-    
-    outdir = "output_graphs"
-    
-    # Generate all plots
-    plot_population_trends(results, outdir)
-    plot_rabbit_wolf_ratio_pie(results, outdir)
-    plot_grid_visualization(results, outdir)
-    plot_phase_space(results, outdir)
-    plot_population_ratio(results, outdir)
-    
-    print(f"All plots have been saved to the '{outdir}' directory.")

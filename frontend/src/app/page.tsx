@@ -12,7 +12,6 @@ import EcologicalFacts from "@/components/EcologicalFacts"
 import AlgorithmInfo from "@/components/AlgorithmInfo"
 import SimulationCharts from "@/components/SimulationCharts"
 import Header from "@/components/Header"
-import InteractiveEcosystem from "@/components/InteractiveEcosystem"
 import QuickStartGuide from "@/components/QuickStartGuide"
 import ModelComparison from "@/components/ModelComparison"
 
@@ -423,7 +422,7 @@ export default function Home() {
           </div>
         </div>
 
-        <InteractiveEcosystem enableFoxes={enableFoxes} />
+        
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
           <QuickStartGuide />
