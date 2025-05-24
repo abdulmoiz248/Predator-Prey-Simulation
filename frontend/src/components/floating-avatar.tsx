@@ -6,7 +6,7 @@ import { useState, useRef, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Bot, X, Send } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { sendChatMessage } from "../chatbot/action"
+import { sendChatMessage } from "@/helpers/action"
 
 export default function FloatingAvatar() {
   const [isOpen, setIsOpen] = useState(false)
@@ -105,7 +105,7 @@ export default function FloatingAvatar() {
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               onClick={toggleChat}
-              className="w-16 h-16 rounded-full bg-gradient-to-r from-[#2A5C82] to-[#34C759] text-white flex items-center justify-center shadow-lg"
+              className="w-16 h-16 rounded-full bg-gradient-to-r from-[#1a1c2e] via-[#1527ce] to-[#3a3f68] text-white flex items-center justify-center shadow-lg"
             >
               <Bot className="w-8 h-8" />
             </motion.button>
@@ -125,7 +125,7 @@ export default function FloatingAvatar() {
             style={{ maxHeight: "80vh" }}
           >
             {/* Chat header */}
-            <div className="bg-gradient-to-r from-[#2A5C82] to-[#34C759] p-4 text-white rounded-t-2xl flex items-center">
+            <div className="bg-gradient-to-r from-[#1a1c2e] dark:via-[#2a2d4a] dark:to-[#3a3f68] p-4 text-white rounded-t-2xl flex items-center">
               <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mr-3">
                 <Bot className="w-5 h-5" />
               </div>
@@ -179,7 +179,7 @@ export default function FloatingAvatar() {
             {/* Chat input - Always visible at bottom */}
             <form
               onSubmit={handleSendMessage}
-              className="p-3 border-t border-gray-100 flex bg-white sticky bottom-0 w-full"
+              className="p-3 border-t border-gray-100 flex bg-white text-black sticky bottom-0 w-full"
             >
               <input
                 ref={inputRef}

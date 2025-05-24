@@ -14,6 +14,7 @@ import SimulationCharts from "@/components/SimulationCharts"
 import Header from "@/components/Header"
 import QuickStartGuide from "@/components/QuickStartGuide"
 import ModelComparison from "@/components/ModelComparison"
+import FloatingAvatar from "@/components/floating-avatar"
 
 const ecologicalFacts = [
   {
@@ -384,6 +385,7 @@ export default function Home() {
     <main className="min-h-screen p-4 bg-gradient-to-br from-[#9bafd9] via-[#c3cfe2] to-[#f5f7fa] dark:from-[#1a1c2e] dark:via-[#2a2d4a] dark:to-[#3a3f68] animate-gradient-x">
       <div className="container mx-auto max-w-7xl">
         <Header />
+        <FloatingAvatar/>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 animate-fade-in">
           <div className="lg:col-span-1">
             <SimulationParameters
