@@ -1,8 +1,11 @@
+'use client'
 import { BookOpen, Github, Info } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { useRouter } from "next/navigation"
 
 export default function Header() {
+  const router=useRouter();
   return (
     <div className="w-full mb-8 animate-fade-in">
       <div className="text-center mb-6">
@@ -10,7 +13,7 @@ export default function Header() {
           Lotka-Volterra Simulator
         </h1>
         <p className="text-gray-600 dark:text-gray-300 mt-2 max-w-2xl mx-auto animate-fade-in-up">
-          Explore the dynamics of predator-prey populations using the classic Lotka-Volterra model and its extensions
+          Explore the dynamics of predator-prey populations using the classic Lotka-Volterra model 
         </p>
       </div>
 
@@ -24,7 +27,7 @@ export default function Header() {
               Ecological Modeling
             </h2>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Simulate population dynamics between rabbits, wolves, and foxes
+              Simulate population dynamics between rabbits, wolves
             </p>
           </div>
         </div>
@@ -34,6 +37,8 @@ export default function Header() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
+                 onClick={()=>router.push('/documentation')}
+               
                   variant="outline"
                   size="sm"
                   className="border-violet-200 dark:border-violet-800 hover:bg-violet-100/50 dark:hover:bg-violet-900/50 transition-all duration-300 hover:scale-105"
@@ -42,7 +47,7 @@ export default function Header() {
                   <span className="hidden sm:inline">Documentation</span>
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>
+              <TooltipContent className="bg-white text-black">
                 <p>Learn more about the Lotka-Volterra model</p>
               </TooltipContent>
             </Tooltip>
@@ -51,7 +56,8 @@ export default function Header() {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button
+                <Button 
+                onClick={()=>router.push('https://github.com/abdulmoiz248/Predator-Prey-Simulation')}
                   variant="outline"
                   size="sm"
                   className="border-pink-200 dark:border-pink-800 hover:bg-pink-100/50 dark:hover:bg-pink-900/50 transition-all duration-300 hover:scale-105"
@@ -60,7 +66,7 @@ export default function Header() {
                   <span className="hidden sm:inline">Source Code</span>
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>
+              <TooltipContent className="bg-white text-black">
                 <p>View the source code on GitHub</p>
               </TooltipContent>
             </Tooltip>

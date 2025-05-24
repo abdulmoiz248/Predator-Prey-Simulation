@@ -334,12 +334,12 @@ const SimulationParameters: React.FC<SimulationParametersProps> = ({
           {simulationRunning ? (
             <>
               <span className="mr-2 h-4 w-4 animate-spin">...</span>
-              Running Simulation...
+              Running Simulation | Generating PDF
             </>
           ) : (
             <>
               <span className="mr-2 h-4 w-4 animate-pulse">▶</span>
-              Start Simulation
+              Start Simulation 
             </>
           )}
         </Button>

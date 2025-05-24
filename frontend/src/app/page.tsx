@@ -13,9 +13,6 @@ import AlgorithmInfo from "@/components/AlgorithmInfo"
 import SimulationCharts from "@/components/SimulationCharts"
 import Header from "@/components/Header"
 import QuickStartGuide from "@/components/QuickStartGuide"
-import ModelComparison from "@/components/ModelComparison"
-import FloatingAvatar from "@/components/floating-avatar"
-
 const ecologicalFacts = [
   {
     title: "Rabbit Reproduction",
@@ -89,7 +86,7 @@ export default function Home() {
   const [coresUsed, setCoresUsed] = useState<number | null>(null)
   const [performanceData, setPerformanceData] = useState<any[]>([])
   const [showConfetti, setShowConfetti] = useState(false)
-  const [showFacts, setShowFacts] = useState(false)
+  const [showFacts, setShowFacts] = useState(true)
   const [currentFactIndex, setCurrentFactIndex] = useState(0)
   const { toast } = useToast()
   const factIntervalRef = useRef<NodeJS.Timeout | null>(null)
@@ -385,7 +382,7 @@ export default function Home() {
     <main className="min-h-screen p-4 bg-gradient-to-br from-[#9bafd9] via-[#c3cfe2] to-[#f5f7fa] dark:from-[#1a1c2e] dark:via-[#2a2d4a] dark:to-[#3a3f68] animate-gradient-x">
       <div className="container mx-auto max-w-7xl">
         <Header />
-        <FloatingAvatar/>
+       
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 animate-fade-in">
           <div className="lg:col-span-1">
             <SimulationParameters
@@ -426,10 +423,7 @@ export default function Home() {
 
         
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
-          <QuickStartGuide />
-          <ModelComparison />
-        </div>
+       <QuickStartGuide />
 
         <EcologicalFacts
           facts={ecologicalFacts}

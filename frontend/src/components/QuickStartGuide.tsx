@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge"
 
 const steps = [
   {
-    title: "Configure Parameters",
+    title: "Set Params",
     description: "Set up your simulation by adjusting the population parameters and model coefficients.",
     icon: <Settings className="h-8 w-8 text-violet-500" />,
     tips: [
