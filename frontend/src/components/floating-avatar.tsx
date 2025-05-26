@@ -12,7 +12,7 @@ export default function FloatingAvatar() {
   const [isOpen, setIsOpen] = useState(false)
   const [message, setMessage] = useState("")
   const [messages, setMessages] = useState<{ text: string; isBot: boolean; isHtml?: boolean }[]>([
-    { text: "Hello! I'm Hygieia AI. How can I help with your health today?", isBot: true },
+    { text: "Hello! I'm your AI. How can I help with your simulation today?", isBot: true },
   ])
   const [isTyping, setIsTyping] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -130,7 +130,7 @@ export default function FloatingAvatar() {
                 <Bot className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="font-bold">Hygieia Health Assistant</h3>
+                <h3 className="font-bold">Lotka-Volterra Simulator Assistant</h3>
                 <p className="text-xs text-white/80">Online • Powered by AI</p>
               </div>
               <button onClick={toggleChat} className="ml-auto p-2 rounded-full hover:bg-white/10">
