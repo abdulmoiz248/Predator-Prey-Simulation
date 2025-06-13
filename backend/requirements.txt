@@ -6,4 +6,7 @@ matplotlib>=3.5
 fpdf>=1.7
 psutil>=5.8
 requests>=2.25
-Pillow>=8.0 
+Pillow>=8.0
+python-dotenv>=0.21
+google-generativeai
+google-api-python-client>=2.0
