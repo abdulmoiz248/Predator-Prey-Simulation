@@ -13,15 +13,12 @@ interface SimulationParametersProps {
   endYear: number
   initialRabbits: number
   initialWolves: number
-  initialFoxes: number
+ 
   alpha: number
   beta: number
   gamma: number
   delta: number
-  foxPredationRate: number
-  foxDeathRate: number
-  foxReproductionRate: number
-  enableFoxes: boolean
+ 
   simulationRunning: boolean
   onChange: (changes: Partial<SimulationParametersProps>) => void
   onStart: () => void
@@ -50,7 +47,7 @@ const SimulationParameters: React.FC<SimulationParametersProps> = ({
     delta: 0.002,
     initialRabbits: 100,
     initialWolves: 20,
-    initialFoxes: 15,
+    
   }
 
   const applyOptimalValues = () => {
@@ -61,7 +58,7 @@ const SimulationParameters: React.FC<SimulationParametersProps> = ({
       delta: suggestions.delta,
       initialRabbits: suggestions.initialRabbits,
       initialWolves: suggestions.initialWolves,
-      initialFoxes: suggestions.initialFoxes,
+    
     })
   }
 

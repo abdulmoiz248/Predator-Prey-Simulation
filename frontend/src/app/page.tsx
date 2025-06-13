@@ -96,15 +96,13 @@ export default function Home() {
   const [endYear, setEndYear] = useState(2033)
   const [initialRabbits, setInitialRabbits] = useState(100)
   const [initialWolves, setInitialWolves] = useState(20)
-  const [initialFoxes, setInitialFoxes] = useState(10)
+
   const [alpha, setAlpha] = useState(0.1)
   const [beta, setBeta] = useState(0.01)
   const [gamma, setGamma] = useState(0.05)
   const [delta, setDelta] = useState(0.001)
-  const [foxPredationRate, setFoxPredationRate] = useState(0.005)
-  const [foxDeathRate, setFoxDeathRate] = useState(0.08)
-  const [foxReproductionRate, setFoxReproductionRate] = useState(0.0005)
-  const [enableFoxes, setEnableFoxes] = useState(false)
+ 
+
 
   // Color schemes
   const colors = {
@@ -167,9 +165,8 @@ export default function Home() {
           year: data.year,
           rabbits: data.rabbits,
           wolves: data.wolves,
-          foxes: data.foxes || 0,
           ratio: data.rabbits > 0 ? (data.wolves / data.rabbits).toFixed(2) : 0,
-          foxRatio: data.rabbits > 0 ? ((data.foxes || 0) / data.rabbits).toFixed(2) : 0,
+     
         },
       ])
       const totalYears = endYear - startYear
@@ -225,15 +222,12 @@ export default function Home() {
     if ("endYear" in changes) setEndYear(changes.endYear)
     if ("initialRabbits" in changes) setInitialRabbits(changes.initialRabbits)
     if ("initialWolves" in changes) setInitialWolves(changes.initialWolves)
-    if ("initialFoxes" in changes) setInitialFoxes(changes.initialFoxes)
+ 
     if ("alpha" in changes) setAlpha(changes.alpha)
     if ("beta" in changes) setBeta(changes.beta)
     if ("gamma" in changes) setGamma(changes.gamma)
     if ("delta" in changes) setDelta(changes.delta)
-    if ("foxPredationRate" in changes) setFoxPredationRate(changes.foxPredationRate)
-    if ("foxDeathRate" in changes) setFoxDeathRate(changes.foxDeathRate)
-    if ("foxReproductionRate" in changes) setFoxReproductionRate(changes.foxReproductionRate)
-    if ("enableFoxes" in changes) setEnableFoxes(changes.enableFoxes)
+  
   }
 
   // Start simulation
@@ -288,15 +282,11 @@ export default function Home() {
       end_year: endYear,
       rabbits: initialRabbits,
       wolves: initialWolves,
-      foxes: enableFoxes ? initialFoxes : 0,
+   
       alpha: alpha,
       beta: beta,
       gamma: gamma,
       delta: delta,
-      enable_foxes: enableFoxes,
-      fox_predation_rate: foxPredationRate,
-      fox_death_rate: foxDeathRate,
-      fox_reproduction_rate: foxReproductionRate,
     }
     socket.emit("start_simulation", params)
     toast({
@@ -315,23 +305,18 @@ export default function Home() {
       firstData.rabbits > 0 ? (((lastData.rabbits - firstData.rabbits) / firstData.rabbits) * 100).toFixed(2) : 0
     const wolfGrowth =
       firstData.wolves > 0 ? (((lastData.wolves - firstData.wolves) / firstData.wolves) * 100).toFixed(2) : 0
-    const foxGrowth =
-      firstData.foxes > 0 ? (((lastData.foxes - firstData.foxes) / firstData.foxes) * 100).toFixed(2) : 0
     const maxRabbits = Math.max(...populationData.map((d) => d.rabbits))
     const minRabbits = Math.min(...populationData.map((d) => d.rabbits))
     const maxWolves = Math.max(...populationData.map((d) => d.wolves))
     const minWolves = Math.min(...populationData.map((d) => d.wolves))
-    const maxFoxes = Math.max(...populationData.map((d) => d.foxes || 0))
-    const minFoxes = Math.min(...populationData.map((d) => d.foxes || 0))
-    const rabbitGrowthRates = []
+   const rabbitGrowthRates = []
     const wolfGrowthRates = []
-    const foxGrowthRates = []
+   
     for (let i = 1; i < populationData.length; i++) {
       const prev = populationData[i - 1]
       const curr = populationData[i]
       if (prev.rabbits > 0) rabbitGrowthRates.push(((curr.rabbits - prev.rabbits) / prev.rabbits) * 100)
       if (prev.wolves > 0) wolfGrowthRates.push(((curr.wolves - prev.wolves) / prev.wolves) * 100)
-      if (prev.foxes > 0) foxGrowthRates.push(((curr.foxes - prev.foxes) / prev.foxes) * 100)
     }
     const avgRabbitGrowth =
       rabbitGrowthRates.length > 0
@@ -341,26 +326,22 @@ export default function Home() {
       wolfGrowthRates.length > 0
         ? (wolfGrowthRates.reduce((sum, rate) => sum + rate, 0) / wolfGrowthRates.length).toFixed(2)
         : "0.00"
-    const avgFoxGrowth =
-      foxGrowthRates.length > 0
-        ? (foxGrowthRates.reduce((sum, rate) => sum + rate, 0) / foxGrowthRates.length).toFixed(2)
-        : "0.00"
+    
     return {
       rabbitGrowth,
       wolfGrowth,
-      foxGrowth,
+     
       maxRabbits,
       minRabbits,
       maxWolves,
       minWolves,
-      maxFoxes,
-      minFoxes,
+    
       currentRabbits: lastData.rabbits,
       currentWolves: lastData.wolves,
-      currentFoxes: lastData.foxes || 0,
+   
       avgRabbitGrowth,
       avgWolfGrowth,
-      avgFoxGrowth,
+    
     }
   }
   const stats = getStatistics()
@@ -372,9 +353,7 @@ export default function Home() {
       { name: "Rabbits", value: lastData.rabbits },
       { name: "Wolves", value: lastData.wolves },
     ]
-    if (enableFoxes && lastData.foxes > 0) {
-      data.push({ name: "Foxes", value: lastData.foxes })
-    }
+  
     return data
   }
 
@@ -390,15 +369,12 @@ export default function Home() {
               endYear={endYear}
               initialRabbits={initialRabbits}
               initialWolves={initialWolves}
-              initialFoxes={initialFoxes}
+            
               alpha={alpha}
               beta={beta}
               gamma={gamma}
               delta={delta}
-              foxPredationRate={foxPredationRate}
-              foxDeathRate={foxDeathRate}
-              foxReproductionRate={foxReproductionRate}
-              enableFoxes={enableFoxes}
+            
               simulationRunning={simulationRunning}
               onChange={handleParamChange}
               onStart={startSimulation}
@@ -417,7 +393,7 @@ export default function Home() {
               pdfUrl={pdfUrl}
               onDownloadPdf={() => pdfUrl && window.open(pdfUrl, "_blank")}
             />
-            <PopulationStatistics stats={stats} enableFoxes={enableFoxes} pieData={getPieData()} COLORS={COLORS} />
+            <PopulationStatistics stats={stats}  pieData={getPieData()} COLORS={COLORS} />
           </div>
         </div>
 
@@ -431,12 +407,12 @@ export default function Home() {
           currentFactIndex={currentFactIndex}
           onToggle={() => setShowFacts((prev) => !prev)}
         />
-        <AlgorithmInfo algorithmInfo={algorithmInfo} includeFoxes={enableFoxes} coresUsed={coresUsed} />
+        <AlgorithmInfo algorithmInfo={algorithmInfo} coresUsed={coresUsed} />
         {populationData.length > 0 && (
           <SimulationCharts
             populationData={populationData}
             performanceData={performanceData}
-            enableFoxes={enableFoxes}
+          
             activeTab={activeTab}
             setActiveTab={setActiveTab}
             colors={colors}

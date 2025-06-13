@@ -23,7 +23,7 @@ import { LineChartIcon, Activity, BarChart3, PieChartIcon, Cpu } from "lucide-re
 interface SimulationChartsProps {
   populationData: any[]
   performanceData: any[]
-  enableFoxes: boolean
+ 
   activeTab: string
   setActiveTab: (tab: string) => void
   colors: Record<string, string>
@@ -33,7 +33,7 @@ interface SimulationChartsProps {
 const SimulationCharts: React.FC<SimulationChartsProps> = ({
   populationData,
   performanceData,
-  enableFoxes,
+ 
   activeTab,
   setActiveTab,
   colors,
@@ -131,18 +131,7 @@ const SimulationCharts: React.FC<SimulationChartsProps> = ({
                     activeDot={{ r: 8, strokeWidth: 0, fill: colors.wolves }}
                     animationDuration={1500}
                   />
-                  {enableFoxes && (
-                    <Line
-                      type="monotone"
-                      dataKey="foxes"
-                      name="Foxes"
-                      stroke={colors.foxes}
-                      strokeWidth={3}
-                      dot={{ r: 4, strokeWidth: 2 }}
-                      activeDot={{ r: 8, strokeWidth: 0, fill: colors.foxes }}
-                      animationDuration={1500}
-                    />
-                  )}
+                 
                 </LineChart>
               </ResponsiveContainer>
             </TabsContent>
@@ -180,17 +169,7 @@ const SimulationCharts: React.FC<SimulationChartsProps> = ({
                     activeDot={{ r: 8 }}
                     animationDuration={1500}
                   />
-                  {enableFoxes && (
-                    <Area
-                      type="monotone"
-                      dataKey="foxes"
-                      name="Foxes"
-                      stroke={colors.foxes}
-                      fill={`${colors.foxes}40`}
-                      activeDot={{ r: 8 }}
-                      animationDuration={1500}
-                    />
-                  )}
+                
                 </AreaChart>
               </ResponsiveContainer>
             </TabsContent>
@@ -224,15 +203,7 @@ const SimulationCharts: React.FC<SimulationChartsProps> = ({
                     radius={[4, 4, 0, 0]}
                     animationDuration={1500}
                   />
-                  {enableFoxes && (
-                    <Bar
-                      dataKey="foxes"
-                      name="Foxes"
-                      fill={colors.foxes}
-                      radius={[4, 4, 0, 0]}
-                      animationDuration={1500}
-                    />
-                  )}
+                 
                 </BarChart>
               </ResponsiveContainer>
             </TabsContent>
@@ -259,14 +230,7 @@ const SimulationCharts: React.FC<SimulationChartsProps> = ({
                     fill={colors.rabbits}
                     animationDuration={1500}
                   />
-                  {enableFoxes && (
-                    <Scatter
-                      name="Rabbits vs Foxes"
-                      data={getPhaseData()}
-                      fill={colors.foxes}
-                      animationDuration={1500}
-                    />
-                  )}
+                
                 </ScatterChart>
               </ResponsiveContainer>
             </TabsContent>

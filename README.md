@@ -58,7 +58,7 @@ This project simulates predator-prey dynamics using a parallel computing approac
    * **Backend**:
 
      ```bash
-     python -m backend.py
+     python -m backend.app
      ```
    * **Frontend**:
 

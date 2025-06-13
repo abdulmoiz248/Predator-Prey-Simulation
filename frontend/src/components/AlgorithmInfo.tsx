@@ -12,11 +12,11 @@ interface AlgorithmInfoSection {
 
 interface AlgorithmInfoProps {
   algorithmInfo: AlgorithmInfoSection[]
-  includeFoxes: boolean
+  
   coresUsed: number | null
 }
 
-const AlgorithmInfo: React.FC<AlgorithmInfoProps> = ({ algorithmInfo, includeFoxes, coresUsed }) => {
+const AlgorithmInfo: React.FC<AlgorithmInfoProps> = ({ algorithmInfo, coresUsed }) => {
   return (
     <Card className="border-none shadow-lg bg-white dark:bg-black/20 backdrop-blur-sm mb-8 animate-fade-in overflow-hidden">
       <CardHeader className="bg-gradient-to-r from-violet-50/50 to-pink-50/50 dark:from-violet-950/30 dark:to-pink-950/30">
@@ -39,11 +39,7 @@ const AlgorithmInfo: React.FC<AlgorithmInfoProps> = ({ algorithmInfo, includeFox
                 <p className="bg-white dark:bg-gray-800 p-2 rounded border border-gray-200 dark:border-gray-700 hover:border-violet-300 dark:hover:border-violet-700 transition-colors">
                   dW/dt = δRW - γW
                 </p>
-                {includeFoxes && (
-                  <p className="bg-white dark:bg-gray-800 p-2 rounded border border-gray-200 dark:border-gray-700 hover:border-violet-300 dark:hover:border-violet-700 transition-colors animate-fade-in">
-                    dF/dt = ηRF - ζF
-                  </p>
-                )}
+              
               </div>
               <div className="mt-4 text-sm">
                 <p className="mb-1">Where:</p>
@@ -54,11 +50,7 @@ const AlgorithmInfo: React.FC<AlgorithmInfoProps> = ({ algorithmInfo, includeFox
                   <li className="hover:text-violet-600 dark:hover:text-violet-400 transition-colors">
                     W = Wolf population
                   </li>
-                  {includeFoxes && (
-                    <li className="hover:text-violet-600 dark:hover:text-violet-400 transition-colors animate-fade-in">
-                      F = Fox population
-                    </li>
-                  )}
+                 
                   <li className="hover:text-violet-600 dark:hover:text-violet-400 transition-colors">
                     α (alpha) = Rabbit growth rate
                   </li>
@@ -71,19 +63,7 @@ const AlgorithmInfo: React.FC<AlgorithmInfoProps> = ({ algorithmInfo, includeFox
                   <li className="hover:text-violet-600 dark:hover:text-violet-400 transition-colors">
                     δ (delta) = Wolf reproduction rate
                   </li>
-                  {includeFoxes && (
-                    <>
-                      <li className="hover:text-violet-600 dark:hover:text-violet-400 transition-colors animate-fade-in">
-                        ε (epsilon) = Fox predation rate
-                      </li>
-                      <li className="hover:text-violet-600 dark:hover:text-violet-400 transition-colors animate-fade-in">
-                        ζ (zeta) = Fox death rate
-                      </li>
-                      <li className="hover:text-violet-600 dark:hover:text-violet-400 transition-colors animate-fade-in">
-                        η (eta) = Fox reproduction rate
-                      </li>
-                    </>
-                  )}
+                 
                 </ul>
               </div>
             </div>

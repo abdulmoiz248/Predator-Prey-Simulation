@@ -7,26 +7,25 @@ interface PopulationStatisticsProps {
   stats: {
     rabbitGrowth: string | number
     wolfGrowth: string | number
-    foxGrowth: string | number
+  
     maxRabbits: number
     minRabbits: number
     maxWolves: number
     minWolves: number
-    maxFoxes: number
-    minFoxes: number
+  
     currentRabbits: number
     currentWolves: number
-    currentFoxes: number
+  
     avgRabbitGrowth: string | number
     avgWolfGrowth: string | number
-    avgFoxGrowth: string | number
+  
   } | null
-  enableFoxes: boolean
+   
   pieData: any[]
   COLORS: string[]
 }
 
-const PopulationStatistics: React.FC<PopulationStatisticsProps> = ({ stats, enableFoxes, pieData, COLORS }) => {
+const PopulationStatistics: React.FC<PopulationStatisticsProps> = ({ stats, pieData, COLORS }) => {
   return (
     <Card className="border shadow-sm bg-white dark:bg-black/20 backdrop-blur-sm animate-fade-in">
       <CardHeader className="pb-2 bg-gradient-to-r from-violet-50/50 to-pink-50/50 dark:from-violet-950/30 dark:to-pink-950/30">
@@ -65,21 +64,7 @@ const PopulationStatistics: React.FC<PopulationStatisticsProps> = ({ stats, enab
                   {Number(stats.wolfGrowth) >= 0 ? "↑" : "↓"} {Math.abs(Number(stats.wolfGrowth))}%
                 </div>
               </div>
-              {enableFoxes && (
-                <div className="bg-amber-50 dark:bg-amber-900/30 p-3 rounded-lg border border-amber-100 dark:border-amber-800 transition-all duration-300 hover:shadow-md hover:scale-[1.02] group animate-fade-in">
-                  <div className="text-sm text-amber-700 dark:text-amber-300 mb-1 group-hover:font-medium transition-all">
-                    Foxes
-                  </div>
-                  <div className="text-xl font-bold text-amber-900 dark:text-amber-100 group-hover:scale-110 transition-transform origin-left">
-                    {stats.currentFoxes}
-                  </div>
-                  <div
-                    className={`text-sm ${Number(stats.foxGrowth) >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}
-                  >
-                    {Number(stats.foxGrowth) >= 0 ? "↑" : "↓"} {Math.abs(Number(stats.foxGrowth))}%
-                  </div>
-                </div>
-              )}
+            
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-gray-50 dark:bg-gray-900/30 p-3 rounded-lg border border-gray-200 dark:border-gray-800 transition-all duration-300 hover:shadow-md">
@@ -97,14 +82,7 @@ const PopulationStatistics: React.FC<PopulationStatisticsProps> = ({ stats, enab
                       {stats.minWolves} - {stats.maxWolves}
                     </span>
                   </div>
-                  {enableFoxes && (
-                    <div className="flex justify-between hover:bg-amber-50 dark:hover:bg-amber-900/20 p-1 rounded transition-colors animate-fade-in">
-                      <span className="text-amber-700 dark:text-amber-300">Foxes:</span>
-                      <span>
-                        {stats.minFoxes} - {stats.maxFoxes}
-                      </span>
-                    </div>
-                  )}
+                
                 </div>
               </div>
               <div className="bg-gray-50 dark:bg-gray-900/30 p-3 rounded-lg border border-gray-200 dark:border-gray-800 transition-all duration-300 hover:shadow-md">
@@ -136,21 +114,7 @@ const PopulationStatistics: React.FC<PopulationStatisticsProps> = ({ stats, enab
                       {stats.avgWolfGrowth}%
                     </span>
                   </div>
-                  {enableFoxes && (
-                    <div className="flex justify-between hover:bg-amber-50 dark:hover:bg-amber-900/20 p-1 rounded transition-colors animate-fade-in">
-                      <span className="text-amber-700 dark:text-amber-300">Foxes:</span>
-                      <span
-                        className={
-                          Number(stats.avgFoxGrowth) >= 0
-                            ? "text-green-600 dark:text-green-400"
-                            : "text-red-600 dark:text-red-400"
-                        }
-                      >
-                        {Number(stats.avgFoxGrowth) >= 0 ? "+" : ""}
-                        {stats.avgFoxGrowth}%
-                      </span>
-                    </div>
-                  )}
+                 
                 </div>
               </div>
             </div>
