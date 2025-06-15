@@ -14,6 +14,7 @@ app = Flask(__name__, static_folder='static')
 CORS(app)
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode='threading')
 
+
 os.makedirs(os.path.join(os.path.dirname(__file__), 'static'), exist_ok=True)
 os.makedirs(os.path.join(os.path.dirname(__file__), 'static', 'plots'), exist_ok=True)
 simulation_results = {}
@@ -97,4 +98,4 @@ def serve_static(filename):
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     print(f'[INFO] Starting server on port {port}')
-    socketio.run(app, host='0.0.0.0', port=port, debug=True) 
+    socketio.run(app, host='0.0.0.0', port=port, debug=True, allow_unsafe_werkzeug=True)
