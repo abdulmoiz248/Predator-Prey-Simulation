@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory, request, jsonify
+from flask import Flask, send_from_directory
 from flask_socketio import SocketIO
 from flask_cors import CORS
 import os
