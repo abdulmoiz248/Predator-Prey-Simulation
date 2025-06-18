@@ -39,33 +39,12 @@ This project simulates predator-prey dynamics using a parallel computing approac
    ```bash
    cd Predator-Prey-Simulation
    ```
-
-3. **Install Backend Dependencies**:
-
+3 **Run this Command in the terminal**
    ```bash
-   pip install -r requirements.txt
+    docker-compose up --build
    ```
-
-4. **Install Frontend Dependencies**:
-
-   ```bash
-   cd frontend
-   npm install
-   ```
-
-5. **Run the Simulation**:
-
-   * **Backend**:
-
-     ```bash
-     python -m backend.app
-     ```
-   * **Frontend**:
-
-     ```bash
-     npm start
-     ```
-
+   
+**Note**: Make sure your docker enigne is runing and env are setup for both frontend and backend
 ---
 
 ## Project Structure
